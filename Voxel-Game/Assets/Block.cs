@@ -24,6 +24,7 @@ public class Block : MonoBehaviour
     private void Start()
     {
         CreateBlock();
+        CombineSides();
     }
 
     // Creating all cube sides
@@ -45,9 +46,6 @@ public class Block : MonoBehaviour
 
         MeshFilter meshFilter = blockSide.AddComponent<MeshFilter>();
         meshFilter.mesh = mesh;
-
-        MeshRenderer meshRenderer = blockSide.AddComponent<MeshRenderer>();
-        meshRenderer.material = material;
     }
 
     // Generating mesh values on side of the cube
@@ -93,5 +91,28 @@ public class Block : MonoBehaviour
                 break;
         }
         return mesh;
+    }
+
+    // Combining sides into one object
+    void CombineSides()
+    {
+        MeshFilter[] meshFilters = GetComponentsInChildren<MeshFilter>();
+        CombineInstance[] combineSides = new CombineInstance[meshFilters.Length];
+
+        for(int i = 0; i < meshFilters.Length; i++)
+        {
+            combineSides[i].mesh = meshFilters[i].sharedMesh;
+            combineSides[i].transform = meshFilters[i].transform.localToWorldMatrix;
+        }
+
+        MeshFilter meshFilter = this.gameObject.AddComponent<MeshFilter>();
+        meshFilter.mesh = new Mesh();
+        meshFilter.mesh.CombineMeshes(combineSides);
+
+        MeshRenderer blockMeshRenderer = this.gameObject.AddComponent<MeshRenderer>();
+        blockMeshRenderer.material = material;
+
+        foreach (Transform side in this.transform)
+            Destroy(side.gameObject);
     }
 }
