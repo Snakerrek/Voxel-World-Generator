@@ -21,7 +21,24 @@ public class Chunk
         for (int z = 0; z < chunkSize; z++)
             for (int y = 0; y < chunkSize; y++)
                 for (int x = 0; x < chunkSize; x++)
-                    chunkBlocks[x, y, z] = new Block(World.blockTypes[Random.Range(0, 4)], this, new Vector3(x, y, z), World.atlasDictionary);
+                {
+                    float worldX = x + chunkObject.transform.position.x;
+                    float worldY = y + chunkObject.transform.position.y;
+                    float worldZ = z + chunkObject.transform.position.z;
+                    float generatedY = ChunkUtils.GenerateHeight(worldX, worldZ);
+
+                    if (worldY <= generatedY)
+                    {
+                        chunkBlocks[x, y, z] = new Block(World.blockTypes[Random.Range(1, 4)], this,
+                                                          new Vector3(x, y, z), World.atlasDictionary);
+                    }
+                    else
+                    {
+                        chunkBlocks[x, y, z] = new Block(World.blockTypes[0], this,
+                                                         new Vector3(x, y, z), World.atlasDictionary);
+                    }
+
+                }
     }
 
     public void DrawChunk(int chunkSize)
