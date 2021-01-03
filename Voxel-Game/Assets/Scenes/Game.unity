@@ -123,7 +123,7 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &140012346
+--- !u!1 &301647290
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -131,25 +131,25 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 140012348}
-  - component: {fileID: 140012347}
+  - component: {fileID: 301647292}
+  - component: {fileID: 301647291}
   m_Layer: 0
-  m_Name: Chunk
+  m_Name: World
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &140012347
+--- !u!114 &301647291
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 140012346}
+  m_GameObject: {fileID: 301647290}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c7e90ab2a3897a34aadeb089bec3fdce, type: 3}
+  m_Script: {fileID: 11500000, guid: f210818b21af1b741b56d885144fb89c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   atlasTextures:
@@ -157,13 +157,15 @@ MonoBehaviour:
   - {fileID: 2800000, guid: 2242c4fd491a4ce47b91d711712923ed, type: 3}
   - {fileID: 2800000, guid: c11d05172551fba4ea770ce643b3cf35, type: 3}
   - {fileID: 2800000, guid: f0b50dccbb244da47b38d8fa5708fe4f, type: 3}
---- !u!4 &140012348
+  columnHeight: 16
+  chunkSize: 16
+--- !u!4 &301647292
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 140012346}
+  m_GameObject: {fileID: 301647290}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}

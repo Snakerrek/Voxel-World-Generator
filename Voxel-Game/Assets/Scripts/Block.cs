@@ -10,6 +10,7 @@ public class Block
 
     BlockType blockType;
     bool isTransparent;
+    Chunk chunkParent;
     GameObject blockParent;
     Vector3 blockPosition;
     Dictionary<string, Rect> blockUVCoordinates;
@@ -27,10 +28,11 @@ public class Block
                                     new Vector2(0f, 1f),
                                     new Vector2(1f, 1f) };
 
-    public Block(BlockType blockType, GameObject blockParent, Vector3 blockPosition, Dictionary<string, Rect> blockUVCoordinates)
+    public Block(BlockType blockType, Chunk chunkParent, Vector3 blockPosition, Dictionary<string, Rect> blockUVCoordinates)
     {
         this.blockType = blockType;
-        this.blockParent = blockParent;
+        this.chunkParent = chunkParent;
+        this.blockParent = chunkParent.chunkObject;
         this.blockPosition = blockPosition;
         this.blockUVCoordinates = blockUVCoordinates;
 
@@ -55,7 +57,7 @@ public class Block
     // Checking if neighbour block is transparent
     bool HasTransparentNeighbour(BlockSide blockSide)
     {
-        Block[,,] chunkBlocks = blockParent.GetComponent<Chunk>().chunkBlocks;
+        Block[,,] chunkBlocks = chunkParent.chunkBlocks;
         Vector3 neighbourPosition = new Vector3(0,0,0);
 
         switch(blockSide)

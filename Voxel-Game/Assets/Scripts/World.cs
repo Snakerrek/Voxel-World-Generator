@@ -6,6 +6,9 @@ public class World : MonoBehaviour
 {
     public Texture2D[] atlasTextures;
     public static Dictionary<string, Rect> atlasDictionary = new Dictionary<string, Rect>();
+    public static Dictionary<string, Chunk> chunks = new Dictionary<string, Chunk>();
+    public int columnHeight = 16;
+    public int chunkSize = 16;
     Material blockMaterial;
     void Start()
     {
@@ -13,6 +16,35 @@ public class World : MonoBehaviour
         Material material = new Material(Shader.Find("Standard"));
         material.mainTexture = atlas;
         this.blockMaterial = material;
+        StartCoroutine(BuildChunkColumn());
+    }
+
+    // Generating column of chunks
+    IEnumerator BuildChunkColumn()
+    {
+        for(int i = 0; i < columnHeight; i++)
+        {
+            Vector3 chunkPosition = new Vector3(this.transform.position.x, i*chunkSize, this.transform.position.z);
+            string chunkName = GenerateChunkName(chunkPosition);
+            Chunk chunk = new Chunk(chunkName, chunkPosition, blockMaterial);
+            chunk.chunkObject.transform.parent = this.transform;
+            chunks.Add(chunkName, chunk);
+        }
+
+        foreach(KeyValuePair<string, Chunk> chunk in chunks)
+        {
+            chunk.Value.DrawChunk(chunkSize);
+        }
+
+        yield return null;
+    }
+
+    // Generating name of chunk based on its position
+    string GenerateChunkName(Vector3 chunkPosition)
+    {
+        return (int)chunkPosition.x + "_" +
+               (int)chunkPosition.y + "_" +
+               (int)chunkPosition.z;
     }
 
     //Generating texture atlas
