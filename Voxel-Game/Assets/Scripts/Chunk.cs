@@ -1,58 +1,42 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class Chunk : MonoBehaviour
+public class Chunk
 {
-    public Texture2D[] atlasTextures;
     public Block[,,] chunkBlocks;
-
-    Dictionary<string, Rect> atlasDictionary = new Dictionary<string, Rect>();
-
+    public GameObject chunkObject;
     Material blockMaterial;
-    void Start()
+
+    public Chunk(string name, Vector3 position, Material material)
     {
-        Texture2D atlas = GetTextureAtlas();
-        Material material = new Material(Shader.Find("Standard"));
-        material.mainTexture = atlas;
-        blockMaterial = material;
-        StartCoroutine(GenerateChunk(16));
+        this.chunkObject = new GameObject(name);
+        this.chunkObject.transform.position = position;
+        this.blockMaterial = material;
+        GenerateChunk(16);
     }
 
-    //Generating texture atlas
-    Texture2D GetTextureAtlas()
-    {
-        Texture2D textureAtlas = new Texture2D(8192, 8192);
-        Rect[] rectCoordinates = textureAtlas.PackTextures(atlasTextures, 0, 8192, false);
-        textureAtlas.Apply();
-
-        for(int i = 0; i < rectCoordinates.Length; i++)
-        {
-            atlasDictionary.Add(atlasTextures[i].name.ToLower(), rectCoordinates[i]);
-        }
-        return textureAtlas;
-    }
-    IEnumerator GenerateChunk(int chunkSize)
+    void GenerateChunk(int chunkSize)
     {
         chunkBlocks = new Block[chunkSize, chunkSize, chunkSize];
 
         for (int z = 0; z < chunkSize; z++)
             for (int y = 0; y < chunkSize; y++)
                 for (int x = 0; x < chunkSize; x++)
-                    chunkBlocks[x, y, z] = new Block((Block.BlockType)Random.Range(0,4), this.gameObject, new Vector3(x,y,z), atlasDictionary);
+                    chunkBlocks[x, y, z] = new Block((Block.BlockType)Random.Range(0, 4), this, new Vector3(x, y, z), World.atlasDictionary);
+    }
 
-        for (int z = 0; z < chunkSize; z++)
+    public void DrawChunk(int chunkSize)
+    {
+        for(int z = 0; z < chunkSize; z++)
             for (int y = 0; y < chunkSize; y++)
-                for (int x = 0; x < chunkSize; x++)
-                    chunkBlocks[x, y, z].CreateBlock();
+            for (int x = 0; x < chunkSize; x++)
+                chunkBlocks[x, y, z].CreateBlock();
         CombineSides();
-        yield return null;
     }
 
     // Combining sides into one object
     void CombineSides()
     {
-        MeshFilter[] meshFilters = GetComponentsInChildren<MeshFilter>();
+        MeshFilter[] meshFilters = chunkObject.GetComponentsInChildren<MeshFilter>();
         CombineInstance[] combineSides = new CombineInstance[meshFilters.Length];
 
         for (int i = 0; i < meshFilters.Length; i++)
@@ -61,14 +45,14 @@ public class Chunk : MonoBehaviour
             combineSides[i].transform = meshFilters[i].transform.localToWorldMatrix;
         }
 
-        MeshFilter blockMeshFilter = this.gameObject.AddComponent<MeshFilter>();
+        MeshFilter blockMeshFilter = chunkObject.AddComponent<MeshFilter>();
         blockMeshFilter.mesh = new Mesh();
         blockMeshFilter.mesh.CombineMeshes(combineSides);
 
-        MeshRenderer blockMeshRenderer = this.gameObject.AddComponent<MeshRenderer>();
+        MeshRenderer blockMeshRenderer = chunkObject.AddComponent<MeshRenderer>();
         blockMeshRenderer.material = blockMaterial;
 
-        foreach (Transform side in this.transform)
-            Destroy(side.gameObject);
+        foreach (Transform side in chunkObject.transform)
+           GameObject.Destroy(side.gameObject);
     }
 }
