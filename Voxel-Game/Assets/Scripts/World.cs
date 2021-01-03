@@ -11,19 +11,33 @@ public class World : MonoBehaviour
     public int chunkSize = 16;
     public int worldSize = 5;
     Material blockMaterial;
+
+    public static List<BlockType> blockTypes = new List<BlockType>();
     void Start()
     {
         Texture2D atlas = GetTextureAtlas();
         Material material = new Material(Shader.Find("Standard"));
         material.mainTexture = atlas;
         this.blockMaterial = material;
+        GenerateBlockTypes();
+        GenerateWorld();
         StartCoroutine(BuildWorld());
     }
 
     // Generating column of chunks
     IEnumerator BuildWorld()
     {
-        for(int z = 0; z < worldSize; z++)
+        foreach(KeyValuePair<string, Chunk> chunk in chunks)
+        {
+            chunk.Value.DrawChunk(chunkSize);
+
+            yield return null;
+        }
+    }
+
+    void GenerateWorld()
+    {
+        for (int z = 0; z < worldSize; z++)
         {
             for (int x = 0; x < worldSize; x++)
             {
@@ -37,13 +51,57 @@ public class World : MonoBehaviour
                 }
             }
         }
+    }
 
-        foreach(KeyValuePair<string, Chunk> chunk in chunks)
+    void GenerateBlockTypes()
+    {
+        BlockType dirt = new BlockType("dirt", false, true);
+        dirt.sideUV = SetBlockTypeUV("dirt");
+        dirt.GenerateBlockUVs();
+        blockTypes.Add(dirt);
+
+        BlockType air = new BlockType("air", true, true);
+        air.sideUV = SetBlockTypeUV("air");
+        air.GenerateBlockUVs();
+        blockTypes.Add(air);
+
+        BlockType brick = new BlockType("brick", false, true);
+        brick.sideUV = SetBlockTypeUV("brick");
+        brick.GenerateBlockUVs();
+        blockTypes.Add(brick);
+
+        BlockType grass = new BlockType("grass", false, false);
+        grass.topUV = SetBlockTypeUV("grass");
+        grass.sideUV = SetBlockTypeUV("grass_side");
+        grass.bottomUV = SetBlockTypeUV("dirt");
+        grass.GenerateBlockUVs();
+        blockTypes.Add(grass);
+    }
+
+    Vector2[] SetBlockTypeUV (string name)
+    {
+        if(name == "air")
         {
-            chunk.Value.DrawChunk(chunkSize);
-
-            yield return null;
+            return new Vector2[4] { new Vector2(0f, 0f),
+                                    new Vector2(1f, 0f),
+                                    new Vector2(0f, 1f),
+                                    new Vector2(1f, 1f) };
         }
+
+        return new Vector2[4]
+            {
+                new Vector2(atlasDictionary[name].x,
+                            atlasDictionary[name].y),
+
+                new Vector2(atlasDictionary[name].x + atlasDictionary[name].width,
+                            atlasDictionary[name].y),
+
+                new Vector2(atlasDictionary[name].x,
+                            atlasDictionary[name].y + atlasDictionary[name].height),
+
+                new Vector2(atlasDictionary[name].x + atlasDictionary[name].width,
+                            atlasDictionary[name].y + atlasDictionary[name].height)
+            };
     }
 
     // Generating name of chunk based on its position

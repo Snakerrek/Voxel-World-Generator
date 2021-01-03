@@ -21,7 +21,7 @@ public class Chunk
         for (int z = 0; z < chunkSize; z++)
             for (int y = 0; y < chunkSize; y++)
                 for (int x = 0; x < chunkSize; x++)
-                    chunkBlocks[x, y, z] = new Block((Block.BlockType)Random.Range(0, 4), this, new Vector3(x, y, z), World.atlasDictionary);
+                    chunkBlocks[x, y, z] = new Block(World.blockTypes[Random.Range(0, 4)], this, new Vector3(x, y, z), World.atlasDictionary);
     }
 
     public void DrawChunk(int chunkSize)
