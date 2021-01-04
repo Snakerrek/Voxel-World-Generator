@@ -10,9 +10,7 @@ public class Block
     BlockType blockType;
     bool isTransparent;
     Chunk chunkParent;
-    GameObject blockParent;
     Vector3 blockPosition;
-    Dictionary<string, Rect> blockUVCoordinates;
 
     static int[] triangles = new int[] { 3, 1, 0, 3, 2, 1 };
 
@@ -39,18 +37,11 @@ public class Block
     static Vector3[] topVertices = new Vector3[] { vertices[7], vertices[6], vertices[5], vertices[4] };
     static Vector3[] bottomVertices = new Vector3[] { vertices[0], vertices[1], vertices[2], vertices[3] };
 
-    Vector2[] uv = new Vector2[4] { new Vector2(0f, 0f),
-                                    new Vector2(1f, 0f),
-                                    new Vector2(0f, 1f),
-                                    new Vector2(1f, 1f) };
-
-    public Block(BlockType blockType, Chunk chunkParent, Vector3 blockPosition, Dictionary<string, Rect> blockUVCoordinates)
+    public Block(BlockType blockType, Chunk chunkParent, Vector3 blockPosition)
     {
         this.blockType = blockType;
         this.chunkParent = chunkParent;
-        this.blockParent = chunkParent.chunkObject;
         this.blockPosition = blockPosition;
-        this.blockUVCoordinates = blockUVCoordinates;
 
         if (blockType.isTransparent)
             isTransparent = true;
@@ -116,7 +107,7 @@ public class Block
 
         GameObject blockSide = new GameObject("Block_side");
         blockSide.transform.position = blockPosition;
-        blockSide.transform.parent = blockParent.transform;
+        blockSide.transform.parent = chunkParent.chunkObject.transform;
 
         MeshFilter meshFilter = blockSide.AddComponent<MeshFilter>();
         meshFilter.mesh = mesh;
@@ -165,5 +156,10 @@ public class Block
                 break;
         }
         return mesh;
+    }
+
+    public BlockType GetBlockType()
+    {
+        return this.blockType;
     }
 }
