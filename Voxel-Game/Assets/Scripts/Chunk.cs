@@ -29,11 +29,14 @@ public class Chunk
                     float worldX = x + chunkObject.transform.position.x;
                     float worldY = y + chunkObject.transform.position.y;
                     float worldZ = z + chunkObject.transform.position.z;
+                    float caveProbability = ChunkUtils.CalculateCaveProbability(worldX, worldY, worldZ);
                     int generated1stLayerHeight = (int)ChunkUtils.Generate1stLayerHeight(worldX, worldZ);
                     int generated2ndLayerHeight = (int)ChunkUtils.Generate2ndLayerHeight(worldX, worldZ, generated1stLayerHeight);
 
                     if (worldY == generated1stLayerHeight)
                         chunkBlocks[x, y, z] = new Block(World.blockTypes[3], this, new Vector3(x, y, z));
+                    else if(caveProbability > 0.55f && worldY < generated1stLayerHeight - 5)
+                        chunkBlocks[x, y, z] = new Block(World.blockTypes[0], this, new Vector3(x, y, z));
                     else if (worldY < generated2ndLayerHeight)
                         chunkBlocks[x, y, z] = new Block(World.blockTypes[4], this, new Vector3(x, y, z));
                     else if (worldY <= generated1stLayerHeight)
