@@ -52,7 +52,7 @@ public class Block
     // Creating all cube sides
     public void CreateBlock()
     {
-        if (blockType.name == "air") return;
+        if (blockType.isTransparent) return;
 
         foreach(BlockSide blockSide in Enum.GetValues(typeof(BlockSide)))
         {

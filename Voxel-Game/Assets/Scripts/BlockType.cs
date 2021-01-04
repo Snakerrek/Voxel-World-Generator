@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class BlockType
 {
-    public enum Type { AIR, DIRT, BRICK, GRASS, STONE, COAL, DIAMOND }
+    public enum Type { AIR, CAVE, DIRT, BRICK, GRASS, STONE, COAL, DIAMOND, SNOW, SAND }
     public string name { get; private set; }
     public bool isTransparent { get; private set; }
     public bool everySideSame { get; private set; }
