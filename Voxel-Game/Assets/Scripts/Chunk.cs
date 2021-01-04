@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
 public class Chunk
 {
@@ -8,7 +10,11 @@ public class Chunk
 
     public enum chunkStatus { GENERATED, DRAWN, TO_DRAW};
     public chunkStatus status;
+    public int vertexIndex { get; set; }
 
+    public List<Vector3> vertices = new List<Vector3>();
+    public List<int> triangles = new List<int>();
+    public List<Vector2> uvs = new List<Vector2>();
     public Chunk(string name, Vector3 position, Material material)
     {
         this.chunkObject = new GameObject(name);
@@ -81,6 +87,8 @@ public class Chunk
 
     public void DrawChunk(int chunkSize)
     {
+        vertexIndex = 0;
+
         for(int z = 0; z < chunkSize; z++)
             for (int y = 0; y < chunkSize; y++)
             for (int x = 0; x < chunkSize; x++)
@@ -93,18 +101,14 @@ public class Chunk
     // Combining sides into one object
     void CombineSides()
     {
-        MeshFilter[] meshFilters = chunkObject.GetComponentsInChildren<MeshFilter>();
-        CombineInstance[] combineSides = new CombineInstance[meshFilters.Length];
-
-        for (int i = 0; i < meshFilters.Length; i++)
-        {
-            combineSides[i].mesh = meshFilters[i].sharedMesh;
-            combineSides[i].transform = meshFilters[i].transform.localToWorldMatrix;
-        }
+        Mesh mesh = new Mesh();
+        mesh.vertices = vertices.ToArray();
+        mesh.triangles = triangles.ToArray();
+        mesh.uv = uvs.ToArray();
+        mesh.RecalculateNormals();
 
         MeshFilter blockMeshFilter = chunkObject.AddComponent<MeshFilter>();
-        blockMeshFilter.mesh = new Mesh();
-        blockMeshFilter.mesh.CombineMeshes(combineSides);
+        blockMeshFilter.mesh = mesh;
 
         MeshRenderer blockMeshRenderer = chunkObject.AddComponent<MeshRenderer>();
         blockMeshRenderer.material = blockMaterial;
