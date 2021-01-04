@@ -5,6 +5,7 @@ public class Chunk
     public Block[,,] chunkBlocks;
     public GameObject chunkObject;
     Material blockMaterial;
+    float caveProbability = 0.4f;
 
     public enum chunkStatus { GENERATED, DRAWN, TO_DRAW};
     public chunkStatus status;
@@ -29,22 +30,35 @@ public class Chunk
                     float worldX = x + chunkObject.transform.position.x;
                     float worldY = y + chunkObject.transform.position.y;
                     float worldZ = z + chunkObject.transform.position.z;
-                    float caveProbability = ChunkUtils.CalculateCaveProbability(worldX, worldY, worldZ);
+                    float blockTypeProbability = ChunkUtils.CalculateBlockProbability(worldX, worldY, worldZ);
                     int generated1stLayerHeight = (int)ChunkUtils.Generate1stLayerHeight(worldX, worldZ);
                     int generated2ndLayerHeight = (int)ChunkUtils.Generate2ndLayerHeight(worldX, worldZ, generated1stLayerHeight);
 
                     if (worldY == generated1stLayerHeight)
-                        chunkBlocks[x, y, z] = new Block(World.blockTypes[3], this, new Vector3(x, y, z));
-                    else if(caveProbability > 0.55f && worldY < generated1stLayerHeight - 5)
-                        chunkBlocks[x, y, z] = new Block(World.blockTypes[0], this, new Vector3(x, y, z));
+                        chunkBlocks[x, y, z] = new Block(World.blockTypes[BlockType.Type.GRASS], this, new Vector3(x, y, z));
+                    else if(blockTypeProbability < caveProbability && worldY < generated1stLayerHeight - 5)
+                        chunkBlocks[x, y, z] = new Block(World.blockTypes[BlockType.Type.AIR], this, new Vector3(x, y, z));
                     else if (worldY < generated2ndLayerHeight)
-                        chunkBlocks[x, y, z] = new Block(World.blockTypes[4], this, new Vector3(x, y, z));
-                    else if (worldY <= generated1stLayerHeight)
-                        chunkBlocks[x, y, z] = new Block(World.blockTypes[1], this, new Vector3(x, y, z));
+                    {
+                        if(blockTypeProbability < 0.3f)
+                        {
+                            chunkBlocks[x, y, z] = new Block(World.blockTypes[BlockType.Type.DIAMOND], this, new Vector3(x, y, z));
+                        }
+                        else if(blockTypeProbability < 0.4f)
+                        {
+                            chunkBlocks[x, y, z] = new Block(World.blockTypes[BlockType.Type.COAL], this, new Vector3(x, y, z));
+                        }
+                        else
+                        {
+                            chunkBlocks[x, y, z] = new Block(World.blockTypes[BlockType.Type.STONE], this, new Vector3(x, y, z));
+                        }
+                    }
+                    else if (worldY < generated1stLayerHeight)
+                        chunkBlocks[x, y, z] = new Block(World.blockTypes[BlockType.Type.DIRT], this, new Vector3(x, y, z));
                     else
                     {
                         this.status = chunkStatus.TO_DRAW;
-                        chunkBlocks[x, y, z] = new Block(World.blockTypes[0], this, new Vector3(x, y, z));
+                        chunkBlocks[x, y, z] = new Block(World.blockTypes[BlockType.Type.AIR], this, new Vector3(x, y, z));
                     }
                 }
 

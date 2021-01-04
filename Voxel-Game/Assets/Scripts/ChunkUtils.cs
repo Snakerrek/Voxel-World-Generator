@@ -58,7 +58,7 @@ public class ChunkUtils
         return (XY + XZ + YZ + YX + ZX + ZY) / 6.0f;
     }
 
-    public static float CalculateCaveProbability(float x, float y, float z)
+    public static float CalculateBlockProbability(float x, float y, float z)
     {
         x = x * caveIncrement + caveOffset;
         y = y * caveIncrement + caveOffset;
