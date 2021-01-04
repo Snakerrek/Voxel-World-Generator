@@ -228,7 +228,6 @@ MonoBehaviour:
   - {fileID: 2800000, guid: c6a4e37ad1d3c7049a0a2887a7768bdf, type: 3}
   - {fileID: 2800000, guid: ce3a58a52558dcd44b5262c0d77a0d15, type: 3}
   columnHeight: 4
-  chunkSize: 16
   worldRadius: 2
 --- !u!4 &301647292
 Transform:

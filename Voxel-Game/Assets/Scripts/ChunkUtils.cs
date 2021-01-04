@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class ChunkUtils
 {
-    //TODO: Use offset to use seeds
+    //TODO: Use offset to do world generation based on seed (like in minecraft)
     static int firstLayerOffset = 0;
     static int secondLayerOffset = 0;
     static int caveOffset = 0;
+    static int moistureOffset = 0;
+    static int temperatureOffset = 0;
     static int maxHeight = 64;
-    static float increment = 0.035f;
-    static float caveIncrement = 0.08f;
 
-    public static float Generate1stLayerHeight(float x, float z)
+    public static float Generate1stLayerHeight(float x, float z, float increment = 0.02f)
     {
         x = x * increment + firstLayerOffset;
         z = z * increment + firstLayerOffset;
@@ -20,7 +20,7 @@ public class ChunkUtils
         float height = Map(1, maxHeight, 0, 1, PerlinNoise(x, z));
         return height;
     }
-    public static float Generate2ndLayerHeight(float x, float z, int maxHeight)
+    public static float Generate2ndLayerHeight(float x, float z, int maxHeight, float increment = 0.1f)
     {
         x = x * increment + secondLayerOffset;
         z = z * increment + secondLayerOffset;
@@ -40,6 +40,15 @@ public class ChunkUtils
         return (to - from) * ((value - from2) / (to2 - from2)) + from;
     }
 
+    public static float GenerateMoisture(float x, float z, float increment = 0.05f)
+    {
+        return PerlinNoise(x * increment + moistureOffset, z * increment + moistureOffset);
+    }
+
+    public static float GenerateTemperature(float x, float z, float increment = 0.05f)
+    {
+        return PerlinNoise(x * increment + temperatureOffset, z * increment + temperatureOffset);
+    }
     static float PerlinNoise(float x, float z)
     {
         float height = Mathf.PerlinNoise(x, z);
@@ -58,11 +67,11 @@ public class ChunkUtils
         return (XY + XZ + YZ + YX + ZX + ZY) / 6.0f;
     }
 
-    public static float CalculateBlockProbability(float x, float y, float z)
+    public static float CalculateBlockProbability(float x, float y, float z, float increment = 0.08f)
     {
-        x = x * caveIncrement + caveOffset;
-        y = y * caveIncrement + caveOffset;
-        z = z * caveIncrement + caveOffset;
+        x = x * increment + caveOffset;
+        y = y * increment + caveOffset;
+        z = z * increment + caveOffset;
         return PerlinNoise3D(x, y, z);
     }
     public static void GenerateRandomOffset()
@@ -70,6 +79,8 @@ public class ChunkUtils
         firstLayerOffset = Random.Range(0, 1000);
         secondLayerOffset = Random.Range(0, 1000);
         caveOffset = Random.Range(0, 1000);
+        moistureOffset = Random.Range(0, 1000);
+        temperatureOffset = Random.Range(0, 1000);
     }
 
 }

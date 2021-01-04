@@ -2,17 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SnowBiome : MonoBehaviour
+public class SnowBiome : Biome
 {
-    // Start is called before the first frame update
-    void Start()
+    public override float firstLayerIncrement { get { return 0.04f; } }
+    protected override BlockType GenerateSurface()
     {
-        
+        return World.blockTypes[BlockType.Type.SNOW];
     }
 
-    // Update is called once per frame
-    void Update()
+    protected override BlockType Generate1stLayer()
     {
-        
+        return World.blockTypes[BlockType.Type.SNOW];
     }
 }

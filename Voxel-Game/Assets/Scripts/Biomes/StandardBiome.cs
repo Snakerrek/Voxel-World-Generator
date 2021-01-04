@@ -2,17 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StandardBiome : MonoBehaviour
+public class StandardBiome : Biome
 {
-    // Start is called before the first frame update
-    void Start()
+    protected override BlockType Generate2ndLayer()
     {
-        
-    }
+        if(typeProbability < 0.1f)
+        {
+            return World.blockTypes[BlockType.Type.DIAMOND];
+        }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        if(typeProbability < 0.25f)
+        {
+            return World.blockTypes[BlockType.Type.COAL];
+        }
+
+        return World.blockTypes[BlockType.Type.STONE];
     }
 }

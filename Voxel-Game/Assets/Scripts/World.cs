@@ -9,7 +9,7 @@ public class World : MonoBehaviour
     public static Dictionary<string, Rect> atlasDictionary = new Dictionary<string, Rect>();
     public static Dictionary<string, Chunk> chunks = new Dictionary<string, Chunk>();
     public int columnHeight = 16;
-    public int chunkSize = 16;
+    public static int chunkSize = 16;
     public int worldRadius = 2;
     Material blockMaterial;
 

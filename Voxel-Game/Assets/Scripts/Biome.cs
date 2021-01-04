@@ -57,9 +57,9 @@ public abstract class Biome
 
     protected virtual void GenerateTerrainValues(float x, float y, float z)
     {
-        typeProbability = ChunkUtils.CalculateBlockProbability(x, y, z);
-        generated1stLayerHeight = (int)ChunkUtils.Generate1stLayerHeight(x, z);
-        generated2ndLayerHeight = (int)ChunkUtils.Generate2ndLayerHeight(x, z, generated1stLayerHeight);
+        typeProbability = ChunkUtils.CalculateBlockProbability(x, y, z, typeIncrement);
+        generated1stLayerHeight = (int)ChunkUtils.Generate1stLayerHeight(x, z, firstLayerIncrement);
+        generated2ndLayerHeight = (int)ChunkUtils.Generate2ndLayerHeight(x, z, generated1stLayerHeight, secondLayerIncrement);
     }
 
 }
