@@ -25,19 +25,21 @@ public class Chunk
                     float worldX = x + chunkObject.transform.position.x;
                     float worldY = y + chunkObject.transform.position.y;
                     float worldZ = z + chunkObject.transform.position.z;
-                    float generatedY = ChunkUtils.GenerateHeight(worldX, worldZ);
+                    int generated1stLayerHeight = (int)ChunkUtils.Generate1stLayerHeight(worldX, worldZ);
+                    int generated2ndLayerHeight = (int)ChunkUtils.Generate2ndLayerHeight(worldX, worldZ, generated1stLayerHeight);
 
-                    if (worldY <= generatedY)
-                    {
-                        chunkBlocks[x, y, z] = new Block(World.blockTypes[Random.Range(1, 4)], this,
-                                                          new Vector3(x, y, z), World.atlasDictionary);
-                    }
+                    if (worldY == generated1stLayerHeight)
+                        chunkBlocks[x, y, z] = new Block(World.blockTypes[3], this,
+                                                         new Vector3(x, y, z), World.atlasDictionary);
+                    else if (worldY < generated2ndLayerHeight)
+                        chunkBlocks[x, y, z] = new Block(World.blockTypes[4], this,
+                                                         new Vector3(x, y, z), World.atlasDictionary);
+                    else if (worldY <= generated1stLayerHeight)
+                        chunkBlocks[x, y, z] = new Block(World.blockTypes[1], this,
+                                                         new Vector3(x, y, z), World.atlasDictionary);
                     else
-                    {
                         chunkBlocks[x, y, z] = new Block(World.blockTypes[0], this,
                                                          new Vector3(x, y, z), World.atlasDictionary);
-                    }
-
                 }
     }
 

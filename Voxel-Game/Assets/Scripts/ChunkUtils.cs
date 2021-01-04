@@ -4,14 +4,20 @@ using UnityEngine;
 
 public class ChunkUtils
 {
-    static int offset = 0; // later change to seed 
-    static int maxHeight = 16;
+    //TODO: Use offset to use seeds
+    static int firstLayerOffset = 0;
+    static int secondLayerOffset = 0;
+    static int maxHeight = 32;
     static float increment = 0.035f;
 
-    public static float GenerateHeight(float x, float z)
+    public static float Generate1stLayerHeight(float x, float z)
     {
-        float height = PerlinNoise(x * increment + offset, z * increment + offset);
-        height = Map(1, maxHeight, 0, 1, height);
+        float height = Map(1, maxHeight, 0, 1, PerlinNoise(x * increment + firstLayerOffset, z * increment + firstLayerOffset));
+        return height;
+    }
+    public static float Generate2ndLayerHeight(float x, float z, int maxHeight)
+    {
+        float height = Map(1, maxHeight, 0, 1, PerlinNoise(x * increment + secondLayerOffset, z * increment + secondLayerOffset));
         return height;
     }
 
@@ -32,10 +38,10 @@ public class ChunkUtils
         return height;
     }
 
-    public static int GenerateRandomOffset()
+    public static void GenerateRandomOffset()
     {
-        offset = Random.Range(0, 1000);
-        return offset;
+        firstLayerOffset = Random.Range(0, 1000);
+        secondLayerOffset = Random.Range(0, 1000);
     }
 
 }

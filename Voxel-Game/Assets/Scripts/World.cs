@@ -10,7 +10,6 @@ public class World : MonoBehaviour
     public int columnHeight = 16;
     public int chunkSize = 16;
     public int worldSize = 5;
-    int offset = 0;
     Material blockMaterial;
 
     public static List<BlockType> blockTypes = new List<BlockType>();
@@ -20,7 +19,7 @@ public class World : MonoBehaviour
         Material material = new Material(Shader.Find("Standard"));
         material.mainTexture = atlas;
         this.blockMaterial = material;
-        offset = ChunkUtils.GenerateRandomOffset();
+        ChunkUtils.GenerateRandomOffset();
         GenerateBlockTypes();
         GenerateWorld();
         StartCoroutine(BuildWorld());
@@ -78,6 +77,11 @@ public class World : MonoBehaviour
         grass.bottomUV = SetBlockTypeUV("dirt");
         grass.GenerateBlockUVs();
         blockTypes.Add(grass);
+
+        BlockType stone = new BlockType("stone", false, true);
+        stone.sideUV = SetBlockTypeUV("stone");
+        stone.GenerateBlockUVs();
+        blockTypes.Add(stone);
     }
 
     Vector2[] SetBlockTypeUV (string name)
