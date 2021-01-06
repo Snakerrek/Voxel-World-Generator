@@ -51,7 +51,6 @@ public class Block
     // Checking if neighbour block is transparent
     bool HasTransparentNeighbour(BlockSide blockSide)
     {
-        Block[,,] chunkBlocks = chunkParent.chunkBlocks;
         Vector3 neighbourPosition = new Vector3(0,0,0);
 
         switch(blockSide)
@@ -76,14 +75,41 @@ public class Block
                 break;
         }
 
-        if (neighbourPosition.x >= 0 && neighbourPosition.x < chunkBlocks.GetLength(0) &&
-            neighbourPosition.y >= 0 && neighbourPosition.y < chunkBlocks.GetLength(0) &&
-            neighbourPosition.z >= 0 && neighbourPosition.z < chunkBlocks.GetLength(0))
+        Block[,,] chunkBlocks = chunkParent.chunkBlocks;
+
+        if(neighbourPosition.x < 0 || neighbourPosition.x >= World.chunkSize ||
+           neighbourPosition.y < 0 || neighbourPosition.y >= World.chunkSize ||
+           neighbourPosition.z < 0 || neighbourPosition.z >= World.chunkSize)
         {
-            return chunkBlocks[(int)neighbourPosition.x, (int)neighbourPosition.y, (int)neighbourPosition.z].blockType.isTransparent
-                || chunkBlocks[(int)neighbourPosition.x, (int)neighbourPosition.y, (int)neighbourPosition.z].blockType.isTranslucent;
+            Vector3 neighbourChunkPosition = this.chunkParent.chunkObject.transform.position;
+            neighbourChunkPosition.x += (neighbourPosition.x - blockPosition.x) * World.chunkSize;
+            neighbourChunkPosition.y += (neighbourPosition.y - blockPosition.y) * World.chunkSize;
+            neighbourChunkPosition.z += (neighbourPosition.z - blockPosition.z) * World.chunkSize;
+
+            string neighboutChunkName = World.GenerateChunkName(neighbourChunkPosition);
+
+            Chunk neighboutChunk;
+            if (World.chunks.TryGetValue(neighboutChunkName, out neighboutChunk))
+            {
+                chunkBlocks = neighboutChunk.chunkBlocks;
+            }
+            else 
+                return true;
         }
-        return true;
+
+        if (neighbourPosition.x < 0) neighbourPosition.x = World.chunkSize - 1;
+        if (neighbourPosition.y < 0) neighbourPosition.y = World.chunkSize - 1;
+        if (neighbourPosition.z < 0) neighbourPosition.z = World.chunkSize - 1;
+        if (neighbourPosition.x >= World.chunkSize) neighbourPosition.x = 0;
+        if (neighbourPosition.y >= World.chunkSize) neighbourPosition.y = 0;
+        if (neighbourPosition.z >= World.chunkSize) neighbourPosition.z = 0;
+
+        var neighbourBlockType = chunkBlocks[(int)neighbourPosition.x, (int)neighbourPosition.y, (int)neighbourPosition.z].blockType;
+
+        if (neighbourBlockType.isTranslucent && !neighbourBlockType.isTransparent && this.blockType.isTranslucent)
+            return false;
+
+        return neighbourBlockType.isTransparent || neighbourBlockType.isTranslucent;
     }
 
     // Generating mesh values on side of the cube

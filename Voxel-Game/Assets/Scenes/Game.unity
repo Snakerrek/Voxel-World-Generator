@@ -229,6 +229,7 @@ MonoBehaviour:
   - {fileID: 2800000, guid: ce3a58a52558dcd44b5262c0d77a0d15, type: 3}
   atlasTransparentTextures:
   - {fileID: 2800000, guid: 30d8c6239084dc043a68b82d76ee1ecb, type: 3}
+  - {fileID: 2800000, guid: dd489c95ff9580744b94f9f08a18b53a, type: 3}
   columnHeight: 4
   worldRadius: 5
 --- !u!4 &301647292

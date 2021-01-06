@@ -211,7 +211,7 @@ public class World : MonoBehaviour
     }
 
     // Generating name of chunk based on its position
-    string GenerateChunkName(Vector3 chunkPosition)
+    public static string GenerateChunkName(Vector3 chunkPosition)
     {
         return chunkPosition.x + "_" +
                chunkPosition.y + "_" +
