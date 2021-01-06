@@ -10,13 +10,13 @@ public static class BiomeUtils
         float moisture = ChunkUtils.GenerateMoisture(chunkPos.x / World.chunkSize, chunkPos.z / World.chunkSize);
         Biome biome = new StandardBiome();
 
-        if(temperature < 0.4f)
+        if(temperature < 0.3f)
         {
             biome = new SnowBiome();
         }
         else
         {
-            if(moisture < 0.5f && temperature > 0.5f)
+            if(moisture < 0.5f && temperature > 0.7f)
             {
                 biome = new DesertBiome();
             }

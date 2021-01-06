@@ -136,7 +136,9 @@ public class Block
 
         foreach(int triangle in triangles)
         {
-            if(this.blockType.isTransparent || this.blockType.isTranslucent)
+            if (this.blockType.isLiquid())
+                chunkParent.liquidTriangles.Add(chunkParent.vertexIndex + triangle);
+            else if (this.blockType.isTransparent || this.blockType.isTranslucent)
                 chunkParent.transparentTriangles.Add(chunkParent.vertexIndex + triangle);
             else
                 chunkParent.triangles.Add(chunkParent.vertexIndex + triangle);

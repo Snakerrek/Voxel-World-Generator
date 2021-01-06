@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class Chunk
 {
@@ -15,6 +16,7 @@ public class Chunk
     public List<Vector3> vertices = new List<Vector3>();
     public List<int> triangles = new List<int>();
     public List<int> transparentTriangles = new List<int>();
+    public List<int> liquidTriangles = new List<int>();
     public List<Vector2> uvs = new List<Vector2>();
     public Chunk(string name, Vector3 position, Material[] material)
     {
@@ -106,9 +108,13 @@ public class Chunk
         mesh.vertices = vertices.ToArray();
         mesh.subMeshCount = 2;
         mesh.SetTriangles(triangles.ToArray(), 0);
-        mesh.SetTriangles(transparentTriangles.ToArray(), 1);
+        mesh.SetTriangles(transparentTriangles.ToArray().Concat(liquidTriangles.ToArray()).ToArray(), 1);
         mesh.uv = uvs.ToArray();
         mesh.RecalculateNormals();
+
+        var colliderMesh = new Mesh();
+        colliderMesh.vertices = vertices.ToArray();
+        colliderMesh.triangles = triangles.ToArray().Concat(transparentTriangles.ToArray()).ToArray();
 
         MeshFilter blockMeshFilter = chunkObject.AddComponent<MeshFilter>();
         blockMeshFilter.mesh = mesh;
@@ -116,7 +122,8 @@ public class Chunk
         MeshRenderer blockMeshRenderer = chunkObject.AddComponent<MeshRenderer>();
         blockMeshRenderer.materials = blockMaterial;
 
-        chunkObject.AddComponent<MeshCollider>();
+        MeshCollider blockMeshCollider = chunkObject.AddComponent<MeshCollider>();
+        blockMeshCollider.sharedMesh = colliderMesh;
 
         foreach (Transform side in chunkObject.transform)
            GameObject.Destroy(side.gameObject);
