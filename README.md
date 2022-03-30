@@ -1,5 +1,12 @@
 # Voxel-World-Generator
 
+<br>Unity application that generates random voxel worlds (built with cube blocks). <br>
+
+<b>Technology:</b><br>
+<img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/csharp/csharp-original.svg" width="50">
+<img src="https://www.vectorlogo.zone/logos/unity3d/unity3d-icon.svg" width="50">
+<br>
+
 ## Features:
 
 - Random world generation with variety of blocks based on properties in code
